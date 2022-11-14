@@ -1,6 +1,6 @@
 use std::sync::Arc;
-use anyhow::Result;
-use chrono::{Utc, TimeZone, Date, Datelike};
+use anyhow::{bail, Result};
+use chrono::{Utc, TimeZone, DateTime, Datelike, LocalResult};
 
 use twilight_model::application::command::{Command, CommandType};
 use twilight_model::application::interaction::application_command::CommandData;
@@ -27,7 +27,10 @@ pub async fn exec(cmd: &Box<CommandData>, interaction: Box<InteractionCreate>, s
         )}
     };
 
-    let creation_date = Utc.timestamp_millis(guild.id.timestamp()).date();
+    let creation_date = match Utc.timestamp_millis_opt(guild.id.timestamp()) {
+        LocalResult::Single(time) => { time }
+        _ => { log::warn!("Incorrect timestamp_millis"); bail!("Error while parsing creation_date") }
+    };
 
     let member_count = state.http().guild_members(cmd.guild_id.unwrap()).exec().await?.model().await?.len();
     
@@ -61,7 +64,7 @@ pub async fn exec(cmd: &Box<CommandData>, interaction: Box<InteractionCreate>, s
     Ok(())
 }
 
-fn format_creation_date(creation_date: Date<Utc>, locale: String) -> String {
+fn format_creation_date(creation_date: DateTime<Utc>, locale: String) -> String {
     match locale.as_str() {
         "de" => { format!("{}.{}.{}", creation_date.day(), creation_date.month(), creation_date.year()) }
         _ => { format!("{}-{}-{}", creation_date.month(), creation_date.day(), creation_date.year()) } // default en-US
