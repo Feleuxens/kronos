@@ -9,7 +9,6 @@ pub struct Config {
     pub MONGO_USER: String,
     pub MONGO_PASSWORD: String,
     pub MONGO_CLUSTER: String,
-    pub MONGO_DB: String,
     pub DATABASE_NAME: String,
 }
 
@@ -44,15 +43,10 @@ lazy_static! {
             Err(_) => panic!("Could not load MONGO_CLUSTER"),
         };
         #[allow(non_snake_case)]
-        let MONGO_DB: String = match std::env::var("MONGO_DB") {
-            Ok(s) => s,
-            Err(_) => panic!("Could not load MONGO_DB"),
-        };
-        #[allow(non_snake_case)]
         let DATABASE_NAME: String = match std::env::var("DATABASE_NAME") {
             Ok(s) => s,
             Err(_) => panic!("Could not load DATABASE_NAME"),
         };
-        Config { VERSION, AUTHOR_ID, REPO, BOT_TOKEN, MONGO_USER, MONGO_PASSWORD, MONGO_CLUSTER, MONGO_DB, DATABASE_NAME }
+        Config { VERSION, AUTHOR_ID, REPO, BOT_TOKEN, MONGO_USER, MONGO_PASSWORD, MONGO_CLUSTER, DATABASE_NAME }
     };
 }
