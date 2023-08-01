@@ -11,13 +11,15 @@ RUN /root/.local/bin/pipenv install --deploy
 
 FROM python:3.11-alpine
 
+WORKDIR /app
+
 RUN addgroup -g 1000 olympus \
     && adduser -G olympus -u 1000 -s /bin/sh -D -H olympus
 
 COPY --from=builder /build/.venv/lib/ /usr/local/lib
 
-COPY bot /app/bot/
+COPY kronos /app/bot/
 
 USER olympus
 
-CMD ["python", "-u", "/app/bot/main.py"]
+CMD ["python", "-u", "-m", "bot.main"]
