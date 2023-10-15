@@ -1,6 +1,4 @@
 from typing import List
-
-from discord import Object
 from discord.ext.commands import Bot
 
 from kronos.utils.logs import get_logger
