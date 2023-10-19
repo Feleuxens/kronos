@@ -13,13 +13,13 @@ FROM python:3.11-alpine
 
 WORKDIR /app
 
-RUN addgroup -g 1000 olympus \
-    && adduser -G olympus -u 1000 -s /bin/sh -D -H olympus
+RUN addgroup -g 1000 kronos \
+    && adduser -G kronos -u 1000 -s /bin/sh -D -H kronos
 
 COPY --from=builder /build/.venv/lib/ /usr/local/lib
 
-COPY kronos /app/bot/
+COPY kronos /app/kronos/
 
-USER olympus
+USER kronos
 
-CMD ["python", "-u", "-m", "bot.main"]
+CMD ["python", "-u", "-m", "kronos.main"]
